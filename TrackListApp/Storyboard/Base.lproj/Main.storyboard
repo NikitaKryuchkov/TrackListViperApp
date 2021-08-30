@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="trackName" textLabel="bFk-WA-NUi" detailTextLabel="Tfk-7O-DXG" style="IBUITableViewCellStyleSubtitle" id="SUL-7K-15N">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="trackName" textLabel="bFk-WA-NUi" detailTextLabel="Tfk-7O-DXG" style="IBUITableViewCellStyleSubtitle" id="SUL-7K-15N" customClass="TrackCellView" customModule="TrackListApp" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="24.5" width="320" height="55.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="SUL-7K-15N" id="pz3-Ic-F7R">

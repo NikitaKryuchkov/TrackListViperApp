@@ -7,40 +7,47 @@
 
 import UIKit
 
+protocol TrackListViewInputProtocol: AnyObject {
+    func reloadData(for section: TrackSectionViewModel)
+}
+
+protocol TrackListViewOutputProtocol: AnyObject {
+    init(view: TrackListViewInputProtocol)
+    func viewDidLoad()
+    func didTapCell(at indexPath: IndexPath)
+}
+
 class TrackListViewController: UITableViewController {
     
-    private var trackList = Track.getTrackList()
+    private var trackList: [Track]!
+    var presenter: TrackListViewOutputProtocol!
+    let configurator: TrackListConfiguratorInputProtocol = TrackListConfigurator()
+    private var sectionViewModel: SectionRowRepresentable = TrackSectionViewModel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        configurator.configure(with: self)
+        presenter.viewDidLoad()
         tableView.rowHeight = 80
         navigationItem.rightBarButtonItem = editButtonItem
     }
 
     // MARK: - Table view data source
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        trackList.count
+        sectionViewModel.rows.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "trackName", for: indexPath)
-        let track = trackList[indexPath.row]
-        
-        var content = cell.defaultContentConfiguration()
-        content.text = track.song
-        content.secondaryText = track.artist
-        content.image = UIImage(named: track.title)
-        content.imageProperties.cornerRadius = tableView.rowHeight / 2
-        cell.contentConfiguration = content
-
+        let cellViewModel = sectionViewModel.rows[ indexPath.row ]
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellViewModel.cellIdentifier, for: indexPath) as! TrackCellView
+        cell.viewModel = cellViewModel
         return cell
     }
 
     // MARK: - Table view delegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let track = trackList[indexPath.row]
-        performSegue(withIdentifier: "showDetails", sender: track)
+        presenter.didTapCell(at: indexPath)
     }
     
     override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
@@ -64,5 +71,12 @@ class TrackListViewController: UITableViewController {
 //        let track = trackList[indexPath.row]
         trackDetailsVC.track = sender as? Track
     }
+}
 
+// MARK: - TrackListViewInputProtocol
+extension TrackListViewController: TrackListViewInputProtocol {
+    func reloadData(for section: TrackSectionViewModel) {
+        sectionViewModel = section
+        tableView.reloadData()
+    }
 }
