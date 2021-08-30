@@ -8,6 +8,7 @@
 import Foundation
 
 class TrackListPresenter: TrackListViewOutputProtocol {
+    
     unowned let view: TrackListViewInputProtocol
     var interactor: TrackListInteractorInputProtocol!
     var router: TrackListRouterInputProtocol!
@@ -22,6 +23,10 @@ class TrackListPresenter: TrackListViewOutputProtocol {
     
     func didTapCell(at indexPath: IndexPath) {
         interactor.getTrack(at: indexPath)
+    }
+    
+    func movedRow(from sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        interactor.getChangesTrackList(from: sourceIndexPath, to: destinationIndexPath)
     }
 }
 

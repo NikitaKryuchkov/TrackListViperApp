@@ -11,6 +11,7 @@ protocol TrackListInteractorInputProtocol: AnyObject {
     init (presentr: TrackListInteractorOutputProtocol)
     func getTrackList()
     func getTrack(at indexPath: IndexPath)
+    func getChangesTrackList(from sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath)
 }
 
 protocol TrackListInteractorOutputProtocol: AnyObject {
@@ -19,6 +20,7 @@ protocol TrackListInteractorOutputProtocol: AnyObject {
 }
 
 class TrackListInteractor: TrackListInteractorInputProtocol {
+    
     unowned let presentr: TrackListInteractorOutputProtocol
     
     required init(presentr: TrackListInteractorOutputProtocol) {
@@ -34,5 +36,12 @@ class TrackListInteractor: TrackListInteractorInputProtocol {
         let tracks = Track.getTrackList()
         let track = tracks[indexPath.row]
         presentr.trackDidReceive(track)
+    }
+    
+    func getChangesTrackList(from sourceIndexPath: IndexPath,to destinationIndexPath: IndexPath) {
+        var tracks = Track.getTrackList()
+        let currentTrack = tracks.remove(at: sourceIndexPath.row)
+        tracks.insert(currentTrack, at: destinationIndexPath.row)
+        presentr.trackListDidReceive(tracks)
     }
 }

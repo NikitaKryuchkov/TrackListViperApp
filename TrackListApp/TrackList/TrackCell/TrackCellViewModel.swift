@@ -22,7 +22,7 @@ class TrackCellViewModel: CellIdentifiable {
     var imageName: String
 
     var cellHeight: Double {
-        100
+        80
     }
 
     var cellIdentifier: String {

@@ -15,11 +15,11 @@ protocol TrackListViewOutputProtocol: AnyObject {
     init(view: TrackListViewInputProtocol)
     func viewDidLoad()
     func didTapCell(at indexPath: IndexPath)
+    func movedRow(from sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath)
 }
 
 class TrackListViewController: UITableViewController {
     
-    private var trackList: [Track]!
     var presenter: TrackListViewOutputProtocol!
     let configurator: TrackListConfiguratorInputProtocol = TrackListConfigurator()
     private var sectionViewModel: SectionRowRepresentable = TrackSectionViewModel()
@@ -28,7 +28,6 @@ class TrackListViewController: UITableViewController {
         super.viewDidLoad()
         configurator.configure(with: self)
         presenter.viewDidLoad()
-        tableView.rowHeight = 80
         navigationItem.rightBarButtonItem = editButtonItem
     }
 
@@ -50,6 +49,10 @@ class TrackListViewController: UITableViewController {
         presenter.didTapCell(at: indexPath)
     }
     
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        CGFloat(sectionViewModel.rows[indexPath.row].cellHeight)
+    }
+    
     override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         .none
     }
@@ -59,17 +62,15 @@ class TrackListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let currentTrack = trackList.remove(at: sourceIndexPath.row)
-        trackList.insert(currentTrack, at: destinationIndexPath.row)
+        presenter.movedRow(from: sourceIndexPath, to: destinationIndexPath)
     }
     
 
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let trackDetailsVC = segue.destination as? TrackDetailsViewController else { return }
-//        guard let indexPath = tableView.indexPathForSelectedRow else { return }
-//        let track = trackList[indexPath.row]
-        trackDetailsVC.track = sender as? Track
+        let trackDetailsVC = segue.destination as! TrackDetailsViewController
+        let configurator: TrackDetailsConfiguratorInputProtocol = TrackDetailsConfigurator()
+        configurator.configure(with: trackDetailsVC, and: sender as! Track)
     }
 }
 

@@ -23,12 +23,9 @@ class TrackDetailsViewController: UIViewController {
     @IBOutlet var trackTitleLabel: UILabel!
     
     var presentr: TrackDetailsViewOutputProtocol!
-    var track: Track!
-    private let configure: TrackDetailsConfiguratorInputProtocol = TrackDetailsConfigurator()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configure.configure(with: self, and: track)
         presentr.showDetails()
     }
 }
