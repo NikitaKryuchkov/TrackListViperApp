@@ -12,10 +12,6 @@ protocol CellIdentifiable  {
     var cellHeight: Double { get }
 }
 
-protocol SectionRowRepresentable {
-    var rows: [CellIdentifiable] { get set }
-}
-
 class TrackCellViewModel: CellIdentifiable {
     var trackName: String
     var artistName: String
@@ -35,9 +31,3 @@ class TrackCellViewModel: CellIdentifiable {
         imageName = track.title
     }
 }
-
-class TrackSectionViewModel: SectionRowRepresentable {
-    var rows: [CellIdentifiable] = []
-}
-
-

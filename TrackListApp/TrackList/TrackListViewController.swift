@@ -8,7 +8,7 @@
 import UIKit
 
 protocol TrackListViewInputProtocol: AnyObject {
-    func reloadData(for section: TrackSectionViewModel)
+    func reloadData(for row: [TrackCellViewModel])
 }
 
 protocol TrackListViewOutputProtocol: AnyObject {
@@ -22,7 +22,7 @@ class TrackListViewController: UITableViewController {
     
     var presenter: TrackListViewOutputProtocol!
     let configurator: TrackListConfiguratorInputProtocol = TrackListConfigurator()
-    private var sectionViewModel: SectionRowRepresentable = TrackSectionViewModel()
+    private var rows: [TrackCellViewModel] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,11 +33,11 @@ class TrackListViewController: UITableViewController {
 
     // MARK: - Table view data source
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        sectionViewModel.rows.count
+        rows.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cellViewModel = sectionViewModel.rows[ indexPath.row ]
+        let cellViewModel = rows[ indexPath.row ]
         let cell = tableView.dequeueReusableCell(withIdentifier: cellViewModel.cellIdentifier, for: indexPath) as! TrackCellView
         cell.viewModel = cellViewModel
         return cell
@@ -50,7 +50,7 @@ class TrackListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        CGFloat(sectionViewModel.rows[indexPath.row].cellHeight)
+        CGFloat(rows[indexPath.row].cellHeight)
     }
     
     override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
@@ -76,8 +76,8 @@ class TrackListViewController: UITableViewController {
 
 // MARK: - TrackListViewInputProtocol
 extension TrackListViewController: TrackListViewInputProtocol {
-    func reloadData(for section: TrackSectionViewModel) {
-        sectionViewModel = section
+    func reloadData(for section: [TrackCellViewModel]) {
+        rows = section
         tableView.reloadData()
     }
 }

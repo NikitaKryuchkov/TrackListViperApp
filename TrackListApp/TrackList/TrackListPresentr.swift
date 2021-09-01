@@ -37,11 +37,9 @@ extension TrackListPresenter: TrackListInteractorOutputProtocol {
     }
     
     func trackListDidReceive(_ tracks: [Track]) {
-        let section = TrackSectionViewModel()
-        tracks.forEach { section.rows.append(TrackCellViewModel(track: $0)) }
+        var rows: [TrackCellViewModel] = []
+        tracks.forEach { rows.append(TrackCellViewModel(track: $0)) }
         
-        view.reloadData(for: section)
+        view.reloadData(for: rows)
     }
-    
-    
 }
